@@ -33,11 +33,19 @@ def home():
 
 
 
+from core.assistant import Assistant
+
+
+jarvis = Assistant()
+
+
 @app.post("/chat")
 def chat(data: Message):
 
+    response = jarvis.process(data.message)
+
     return {
-        "reply": f"I received: {data.message}"
+        "reply": response
     }
 
 
