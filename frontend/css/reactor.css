@@ -1,0 +1,279 @@
+/* ============================================================
+   REACTOR.CSS
+   The energy orb is the assistant's identity. It is built
+   entirely from layered gradients and pseudo-elements — no
+   image assets. Keyframes live in animations.css; this file
+   defines structure, layering and the per-state color themes.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   STAGE
+   The stage owns perspective and centers the orb, giving room
+   for the ambient glow to bloom outward without being clipped.
+   ---------------------------------------------------------- */
+.reactor-stage {
+  position: relative;
+  width: 100%;
+  height: calc(var(--orb-size) + 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 800px;
+}
+
+/* ----------------------------------------------------------
+   AMBIENT GLOW
+   A large, soft, blurred bloom sitting behind the orb. This is
+   what makes the reactor feel like it is casting light onto
+   the panel rather than sitting flat on top of it.
+   ---------------------------------------------------------- */
+.reactor-glow {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--state-a, var(--accent-bright)) 55%, transparent) 0%,
+    color-mix(in srgb, var(--state-b, var(--accent-deep)) 30%, transparent) 40%,
+    transparent 72%
+  );
+  filter: blur(26px);
+  opacity: 0.55;
+  animation: reactor-breathe var(--duration-breathe) var(--ease-in-out-soft) infinite;
+  transition: background var(--duration-slow) var(--ease-standard);
+  will-change: transform, opacity;
+}
+
+/* ----------------------------------------------------------
+   ORB CORE
+   A stack of concentric layers, each a pseudo-element or child
+   div, composited to fake sub-surface light scattering and a
+   glassy 3D highlight.
+   ---------------------------------------------------------- */
+.reactor-orb {
+  position: relative;
+  width: var(--orb-size);
+  height: var(--orb-size);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  animation: reactor-float 7.4s var(--ease-in-out-soft) infinite;
+  will-change: transform;
+}
+
+/* Layer 1 — the deep body of the sphere: its base shading and
+   the illusion of curvature via an offset radial gradient. */
+.reactor-core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 34% 28%,
+      var(--state-core, var(--accent-core)) 0%,
+      var(--state-a, var(--accent-bright)) 26%,
+      var(--state-b, var(--accent-deep)) 62%,
+      color-mix(in srgb, var(--state-b, var(--accent-ember)) 70%, black) 100%
+    );
+  box-shadow:
+    inset -14px -18px 30px rgba(0, 0, 0, 0.5),
+    inset 10px 8px 18px rgba(255, 255, 255, 0.18),
+    0 0 32px color-mix(in srgb, var(--state-a, var(--accent-bright)) 45%, transparent);
+  transition: background var(--duration-slow) var(--ease-standard),
+              box-shadow var(--duration-slow) var(--ease-standard);
+  animation: reactor-pulse-scale var(--duration-breathe) var(--ease-in-out-soft) infinite;
+}
+
+/* Layer 2 — a slowly rotating conic sheen that reads as light
+   sliding across a glassy surface. */
+.reactor-sheen {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(255, 255, 255, 0.22) 40deg,
+    transparent 90deg,
+    transparent 260deg,
+    rgba(255, 255, 255, 0.08) 300deg,
+    transparent 340deg
+  );
+  mix-blend-mode: screen;
+  animation: reactor-rotate var(--duration-rotate) linear infinite;
+  opacity: 0.85;
+}
+
+/* Layer 3 — the hot inner core, small and bright, giving the
+   sphere a light source of its own. */
+.reactor-inner-light {
+  position: absolute;
+  width: 34%;
+  height: 34%;
+  top: 24%;
+  left: 22%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--state-core, var(--accent-core)) 0%,
+    color-mix(in srgb, var(--state-a, var(--accent-bright)) 70%, transparent) 60%,
+    transparent 100%
+  );
+  filter: blur(1px);
+  opacity: 0.9;
+  animation: reactor-inner-pulse var(--duration-breathe) var(--ease-in-out-soft) infinite;
+}
+
+/* Layer 4 — top glass highlight, fixed regardless of state, to
+   preserve the 3D "sphere" read at every color theme. */
+.reactor-highlight {
+  position: absolute;
+  width: 26%;
+  height: 16%;
+  top: 14%;
+  left: 30%;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55),
+    rgba(255, 255, 255, 0)
+  );
+  filter: blur(0.5px);
+  transform: rotate(-18deg);
+  opacity: 0.7;
+}
+
+/* Layer 5 — a thin orbiting ring, used mainly to communicate
+   the listening / thinking / speaking states. */
+.reactor-ring {
+  position: absolute;
+  inset: -14%;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--state-a, var(--accent-bright)) 55%, transparent);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity var(--duration-base) var(--ease-standard),
+              border-color var(--duration-slow) var(--ease-standard);
+}
+
+/* ----------------------------------------------------------
+   STATE THEMING
+   Setting data-state on the orb root swaps the CSS custom
+   properties every layer above reads from. Colors transition
+   smoothly; the animation profile changes per state below.
+   ---------------------------------------------------------- */
+.reactor {
+  --state-a: var(--state-idle-a);
+  --state-b: var(--state-idle-b);
+  --state-core: var(--accent-core);
+  position: relative;
+}
+
+.reactor[data-state='idle'] {
+  --state-a: var(--state-idle-a);
+  --state-b: var(--state-idle-b);
+}
+
+.reactor[data-state='listening'] {
+  --state-a: var(--state-listening-a);
+  --state-b: var(--state-listening-b);
+  --state-core: #eaf8ff;
+}
+
+.reactor[data-state='listening'] .reactor-ring {
+  opacity: 0.9;
+  animation: reactor-ring-expand 1.8s var(--ease-out-soft) infinite;
+}
+
+.reactor[data-state='thinking'] {
+  --state-a: var(--state-thinking-a);
+  --state-b: var(--state-thinking-b);
+  --state-core: #f1e7ff;
+}
+
+.reactor[data-state='thinking'] .reactor-orb {
+  animation: reactor-float 7.4s var(--ease-in-out-soft) infinite,
+             reactor-wobble 2.4s var(--ease-in-out-soft) infinite;
+}
+
+.reactor[data-state='thinking'] .reactor-sheen {
+  animation-duration: 3.2s;
+}
+
+.reactor[data-state='speaking'] {
+  --state-a: var(--state-speaking-a);
+  --state-b: var(--state-speaking-b);
+  --state-core: var(--accent-core);
+}
+
+.reactor[data-state='speaking'] .reactor-core {
+  animation: reactor-pulse-scale 900ms var(--ease-in-out-soft) infinite;
+}
+
+.reactor[data-state='speaking'] .reactor-inner-light {
+  animation: reactor-inner-pulse 900ms var(--ease-in-out-soft) infinite;
+}
+
+.reactor[data-state='speaking'] .reactor-ring {
+  opacity: 0.6;
+  animation: reactor-ring-expand 1.1s var(--ease-out-soft) infinite;
+}
+
+.reactor[data-state='offline'] {
+  --state-a: var(--state-offline-a);
+  --state-b: var(--state-offline-b);
+  --state-core: #c7c9cd;
+}
+
+.reactor[data-state='offline'] .reactor-orb,
+.reactor[data-state='offline'] .reactor-core,
+.reactor[data-state='offline'] .reactor-inner-light,
+.reactor[data-state='offline'] .reactor-glow {
+  animation-play-state: paused;
+}
+
+.reactor[data-state='offline'] .reactor-glow {
+  opacity: 0.18;
+}
+
+.reactor[data-state='offline'] .reactor-sheen {
+  opacity: 0.3;
+}
+
+.reactor[data-state='error'] {
+  --state-a: var(--state-error-a);
+  --state-b: var(--state-error-b);
+  --state-core: #ffe1e1;
+}
+
+.reactor[data-state='error'] .reactor-ring {
+  opacity: 0.85;
+  border-color: color-mix(in srgb, var(--state-error-a) 70%, transparent);
+  animation: reactor-shake 520ms var(--ease-standard) 1;
+}
+
+.reactor[data-state='error'] .reactor-orb {
+  animation: reactor-float 7.4s var(--ease-in-out-soft) infinite,
+             reactor-shake 520ms var(--ease-standard) 1;
+}
+
+/* ----------------------------------------------------------
+   STATUS LABEL BELOW ORB (optional micro-copy, set via JS)
+   ---------------------------------------------------------- */
+.reactor-caption {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--font-size-2xs);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-standard);
+}
+
+.reactor-stage[data-show-caption='true'] .reactor-caption {
+  opacity: 1;
+}
