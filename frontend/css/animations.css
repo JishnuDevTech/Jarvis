@@ -1,0 +1,197 @@
+/* ============================================================
+   ANIMATIONS.CSS
+   Every @keyframes rule in the project lives here. All motion
+   is restricted to transform and opacity so it stays on the
+   GPU compositor and never triggers layout or paint thrash.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   REACTOR — ambient glow breathing in and out
+   ---------------------------------------------------------- */
+@keyframes reactor-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.68;
+  }
+}
+
+/* ----------------------------------------------------------
+   REACTOR — gentle vertical float, as if weightless
+   ---------------------------------------------------------- */
+@keyframes reactor-float {
+  0%,
+  100% {
+    transform: translateY(0) rotateX(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotateX(2deg);
+  }
+}
+
+/* ----------------------------------------------------------
+   REACTOR — core surface pulsing subtly, driving the sense of
+   an internal light source
+   ---------------------------------------------------------- */
+@keyframes reactor-pulse-scale {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.08);
+  }
+}
+
+/* ----------------------------------------------------------
+   REACTOR — slow conic sheen rotation
+   ---------------------------------------------------------- */
+@keyframes reactor-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ----------------------------------------------------------
+   REACTOR — inner hot core pulsing slightly out of phase with
+   the outer core for a layered, alive feeling
+   ---------------------------------------------------------- */
+@keyframes reactor-inner-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* ----------------------------------------------------------
+   REACTOR — listening / speaking ring expanding outward and
+   fading, like a signal being emitted
+   ---------------------------------------------------------- */
+@keyframes reactor-ring-expand {
+  0% {
+    transform: scale(0.88);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.22);
+    opacity: 0;
+  }
+}
+
+/* ----------------------------------------------------------
+   REACTOR — thinking wobble, a small asymmetric tilt that
+   reads as active computation rather than idle rest
+   ---------------------------------------------------------- */
+@keyframes reactor-wobble {
+  0%,
+  100% {
+    transform: rotateZ(0deg) rotateY(0deg);
+  }
+  25% {
+    transform: rotateZ(-1.4deg) rotateY(3deg);
+  }
+  75% {
+    transform: rotateZ(1.4deg) rotateY(-3deg);
+  }
+}
+
+/* ----------------------------------------------------------
+   REACTOR — error shake, a single sharp acknowledgement
+   ---------------------------------------------------------- */
+@keyframes reactor-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+/* ----------------------------------------------------------
+   MESSAGES — soft entrance as new content appears
+   ---------------------------------------------------------- */
+@keyframes message-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ----------------------------------------------------------
+   TYPING INDICATOR — three dots bouncing in sequence
+   ---------------------------------------------------------- */
+@keyframes typing-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+/* ----------------------------------------------------------
+   INPUT — focus ring glow fade-in
+   ---------------------------------------------------------- */
+@keyframes input-glow-in {
+  from {
+    box-shadow: 0 0 0 0 rgba(255, 176, 77, 0);
+  }
+  to {
+    box-shadow: 0 0 0 3px rgba(255, 176, 77, 0.14);
+  }
+}
+
+/* ----------------------------------------------------------
+   MICROPHONE — recording pulse while actively listening
+   ---------------------------------------------------------- */
+@keyframes mic-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(111, 211, 255, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(111, 211, 255, 0);
+  }
+}
+
+/* ----------------------------------------------------------
+   STATUS DOT — idle heartbeat
+   ---------------------------------------------------------- */
+@keyframes status-dot-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
