@@ -481,14 +481,25 @@
     // Every caller already treats this as asynchronous, so no other
     // module needs to change when the real integration lands.
     function requestResponse(text) {
-      return new Promise(function (resolve) {
-        const thinkingDelay = 650 + Math.random() * 700;
-        setTimeout(function () {
-          resolve(
-            'I received your message: "' + text + '". Backend integration is not yet connected.'
-          );
-        }, thinkingDelay);
-      });
+
+      return fetch("http://127.0.0.1:8000/chat", {
+    
+        method: "POST",
+    
+        headers: {
+          "Content-Type": "application/json"
+        },
+    
+        body: JSON.stringify({
+          message: text
+        })
+    
+      })
+    
+      .then(response => response.json())
+    
+      .then(data => data.reply);
+    
     }
 
     return {
