@@ -1,0 +1,234 @@
+/* ============================================================
+   LAYOUT.CSS
+   Structural composition of the docked companion window:
+   panel shell, header (orb + identity + context), the
+   conversation region, and the input dock.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   WINDOW / PANEL SHELL
+   The panel occupies the left 24–28% of the viewport. The rest
+   of the viewport is intentionally left transparent so the
+   host desktop shows through — this file never paints
+   anything outside .jarvis-panel.
+   ---------------------------------------------------------- */
+.jarvis-window {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.jarvis-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--panel-width);
+  min-width: var(--panel-min-width);
+  max-width: var(--panel-max-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(120% 60% at 15% -10%, rgba(255, 138, 61, 0.05), transparent 55%),
+    var(--surface-panel);
+  border-right: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+
+/* Faint vertical seam of light along the panel's trailing edge
+   — the single detail that reads as "docked hardware" rather
+   than "browser window". */
+.jarvis-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 176, 77, 0.16) 45%,
+    rgba(255, 176, 77, 0.16) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ----------------------------------------------------------
+   HEADER
+   Orb + identity block + live context (greeting / date /
+   weather). Generous top space so the orb feels like it is
+   floating rather than sitting in a toolbar.
+   ---------------------------------------------------------- */
+.jarvis-header {
+  position: relative;
+  z-index: var(--z-header);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl) var(--space-lg) var(--space-lg);
+  flex-shrink: 0;
+}
+
+.jarvis-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xs);
+  text-align: center;
+}
+
+.jarvis-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.jarvis-status-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.jarvis-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--state-idle-a);
+  box-shadow: 0 0 8px rgba(255, 176, 77, 0.7);
+  transition: background var(--duration-base) var(--ease-standard),
+              box-shadow var(--duration-base) var(--ease-standard);
+}
+
+/* ----------------------------------------------------------
+   CONTEXT ROW — greeting, date, weather
+   ---------------------------------------------------------- */
+.jarvis-context {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding-top: var(--space-xs);
+}
+
+.jarvis-greeting {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--text-primary);
+}
+
+.jarvis-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.jarvis-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  white-space: nowrap;
+}
+
+.jarvis-meta-icon {
+  width: 14px;
+  height: 14px;
+  stroke: var(--text-secondary);
+  stroke-width: 1.6;
+  flex-shrink: 0;
+}
+
+.jarvis-meta-divider {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.jarvis-weather-temp {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+/* ----------------------------------------------------------
+   CONVERSATION REGION
+   Fills all remaining vertical space between header and dock.
+   ---------------------------------------------------------- */
+.jarvis-conversation {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Soft fade at the top of the scroll region so messages appear
+   to emerge from beneath the header rather than clipping hard. */
+.jarvis-conversation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: linear-gradient(180deg, var(--surface-panel), transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.jarvis-messages {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--space-md) var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  scroll-behavior: smooth;
+}
+
+/* ----------------------------------------------------------
+   INPUT DOCK
+   Pinned to the bottom of the panel. A subtle top fade keeps
+   the last message from feeling like it touches the dock.
+   ---------------------------------------------------------- */
+.jarvis-dock {
+  position: relative;
+  z-index: var(--z-input);
+  flex-shrink: 0;
+  padding: var(--space-sm) var(--space-lg) var(--space-lg);
+  background: linear-gradient(180deg, transparent, var(--surface-panel) 40%);
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE
+   The panel keeps its proportional width down to smaller
+   desktop displays, then locks to its minimum width so nothing
+   in the header wraps awkwardly.
+   ---------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .jarvis-panel {
+    width: 32vw;
+  }
+}
+
+@media (max-width: 760px) {
+  .jarvis-panel {
+    width: 100vw;
+    max-width: 100vw;
+    min-width: 0;
+  }
+}
