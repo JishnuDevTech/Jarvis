@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JARVIS</title>
+
+  <!-- Inter — the sole typeface used throughout the interface -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/reactor.css" />
+  <link rel="stylesheet" href="css/chat.css" />
+  <link rel="stylesheet" href="css/input.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+  <div class="jarvis-window">
+    <section class="jarvis-panel" aria-label="JARVIS assistant">
+
+      <!-- ============================================================
+           HEADER — reactor orb, identity, live context
+           ============================================================ -->
+      <header class="jarvis-header">
+
+        <div class="reactor-stage" id="reactorStage" data-show-caption="false">
+          <div class="reactor-glow" aria-hidden="true"></div>
+
+          <div class="reactor" id="reactor" data-state="idle" role="img" aria-label="Assistant status: idle">
+            <div class="reactor-orb">
+              <div class="reactor-core"></div>
+              <div class="reactor-sheen"></div>
+              <div class="reactor-inner-light"></div>
+              <div class="reactor-highlight"></div>
+            </div>
+            <div class="reactor-ring" aria-hidden="true"></div>
+          </div>
+
+          <span class="reactor-caption" id="reactorCaption">Listening</span>
+        </div>
+
+        <div class="jarvis-identity">
+          <h1 class="jarvis-title">Jarvis</h1>
+          <div class="jarvis-status-line">
+            <span class="jarvis-status-dot" id="statusDot" aria-hidden="true"></span>
+            <span id="statusLabel">Online</span>
+          </div>
+        </div>
+
+        <div class="jarvis-context">
+          <p class="jarvis-greeting" id="greeting">Good evening</p>
+          <div class="jarvis-meta">
+            <span class="jarvis-meta-item" id="dateDisplay">
+              <svg class="jarvis-meta-icon" viewBox="0 0 24 24" fill="none">
+                <rect x="3.5" y="5" width="17" height="16" rx="2.5" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M8 3v4M16 3v4M3.5 10h17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <span id="dateText">&nbsp;</span>
+            </span>
+            <span class="jarvis-meta-divider" aria-hidden="true"></span>
+            <span class="jarvis-meta-item" id="weatherDisplay">
+              <svg class="jarvis-meta-icon" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <span class="jarvis-weather-temp" id="weatherText">&nbsp;</span>
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============================================================
+           CONVERSATION
+           ============================================================ -->
+      <main class="jarvis-conversation">
+        <div class="jarvis-messages" id="messages" role="log" aria-live="polite" aria-label="Conversation"></div>
+      </main>
+
+      <!-- ============================================================
+           INPUT DOCK
+           ============================================================ -->
+      <footer class="jarvis-dock">
+        <form class="composer" id="composerForm">
+          <label class="visually-hidden" for="composerField">Message JARVIS</label>
+          <textarea
+            id="composerField"
+            class="composer-field"
+            rows="1"
+            placeholder="Ask JARVIS anything..."
+            autocomplete="off"
+            autocapitalize="sentences"
+            spellcheck="true"
+          ></textarea>
+
+          <div class="composer-controls">
+            <button
+              type="button"
+              class="composer-button composer-mic"
+              id="micButton"
+              data-active="false"
+              aria-pressed="false"
+              aria-label="Toggle voice input"
+              title="Voice input"
+            >
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="9" y="2.5" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M5.5 11a6.5 6.5 0 0 0 13 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                <path d="M12 17.5v3.2M9 20.7h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+            </button>
+
+            <button
+              type="submit"
+              class="composer-button composer-send"
+              id="sendButton"
+              data-ready="false"
+              aria-label="Send message"
+              title="Send"
+              disabled
+            >
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 12L20 4L13.5 20L11 13L4 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <div class="composer-hint" id="composerHint">
+          <span><kbd>Enter</kbd> to send &nbsp;·&nbsp; <kbd>Shift</kbd>+<kbd>Enter</kbd> for a new line</span>
+        </div>
+      </footer>
+
+    </section>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
